@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/NavigationDrawerColor"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/trip_type_back"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/NavigationDrawerColor"
+                android:drawableLeft="@drawable/ic_chevron_left_black_24dp"
+                android:gravity="top|left"
+                android:paddingTop="10dp"
+                android:text="Back"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_drive_eta_white_24dp"
+                    android:text="Trip Type"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_location_on_black_24dp"
+                    android:text="From - To"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_access_time_black_24dp"
+                    android:text="Time"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_details_black_24dp"
+                    android:text="Details"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_payment_black_24dp"
+                    android:text="Payment"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@color/gray"
+                android:padding="10dp"
+                android:text="What do You want to do?"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:id="@+id/car_share"
+            android:drawableRight="@drawable/ic_directions_car_black_24dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="Car Share"
+            android:textAlignment="textStart"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableRight="@drawable/ic_next_week_black_24dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="Freight (transport goods)"
+            android:textAlignment="textStart"
+            android:textAllCaps="false" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:id="@+id/trip_type_radio"
+            android:orientation="horizontal"
+            android:paddingLeft="50dp">
+
+            <RadioButton
+                android:id="@+id/trip_type_internal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Internal" />
+
+            <RadioButton
+                android:id="@+id/trip_type_external"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="External" />
+        </RadioGroup>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:id="@+id/trip_type_next"
+            android:background="@color/NavigationDrawerColor"
+            android:text="Next"
+            android:layout_marginBottom="35dp"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+</ScrollView>

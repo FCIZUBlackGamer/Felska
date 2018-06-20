@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/NavigationDrawerColor"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/from_to_back"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/NavigationDrawerColor"
+                android:drawableLeft="@drawable/ic_chevron_left_black_24dp"
+                android:gravity="top|left"
+                android:paddingTop="10dp"
+                android:text="Back"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_drive_eta_black_24dp"
+                    android:text="Trip Type"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_location_on_white_24dp"
+                    android:text="From - To"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_access_time_black_24dp"
+                    android:text="Time"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_details_black_24dp"
+                    android:text="Details"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/NavigationDrawerColor"
+                    android:drawableTop="@drawable/ic_payment_black_24dp"
+                    android:text="Payment"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white"
+                android:id="@+id/from_to_from_title"
+                android:hint="Where do you come from?"
+                android:padding="15dp" />
+
+            <EditText
+                android:id="@+id/from_to_from_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="left|top"
+                android:hint="More details"
+                android:minLines="3"
+                android:padding="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/from_to_to_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white"
+                android:hint="Where do you want to go?"
+                android:padding="15dp" />
+
+            <EditText
+                android:id="@+id/from_to_to_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="left|top"
+                android:hint="More details"
+                android:minLines="3"
+                android:padding="15dp" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/NavigationDrawerColor"
+            android:text="Next"
+            android:id="@+id/from_to_next"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</ScrollView>
