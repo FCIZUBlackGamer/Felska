@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     String semail;
     Database database;
     Cursor cursor;
+    EditText search_field;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +64,11 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         database = new Database(this);
         cursor = database.ShowData();
+
         while (cursor.moveToNext()){
             semail = cursor.getString(2);
         }
+
         fragmentManager = getFragmentManager();
         fragment = new TripsFragment();
         final FragmentTransaction transaction1 = fragmentManager.beginTransaction();
@@ -117,6 +121,7 @@ public class MainActivity extends AppCompatActivity
         imageView = view.findViewById(R.id.imageView);
         name = view.findViewById(R.id.name);
         email = view.findViewById(R.id.email);
+        search_field = findViewById(R.id.search_field);
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         StringRequest request = new StringRequest(Request.Method.POST, "https://felska.000webhostapp.com/GetUserNavInfo.php", new Response.Listener<String>() {
             @Override
@@ -192,7 +197,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            // Show Dialog To take search word
+            fragment = new TripsFragment().pass(search_field.getText().toString());
+            final FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.container, fragment).commit();
             return true;
         }
 
@@ -226,13 +233,16 @@ public class MainActivity extends AppCompatActivity
             transaction.replace(R.id.container, fragment).commit();
         } else if (id == R.id.nav_notification) {
             //All Trips of people who wants to come with me
-            fragment = new TripsFragment();
+            fragment = new NotificationFragment();
             final FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.container, fragment).commit();
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
-
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            database.UpdateData("1","0","0","0");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

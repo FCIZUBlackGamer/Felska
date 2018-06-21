@@ -31,7 +31,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 @SuppressLint("ValidFragment")
 class TripsFragment extends Fragment {
@@ -43,7 +42,7 @@ class TripsFragment extends Fragment {
     Cursor cursor;
 
 
-    static TripsFragment pass(String x){
+    static TripsFragment pass(String x) {
         TripsFragment tripsFragment = new TripsFragment();
         tripsFragment.word = x;
         return tripsFragment;
@@ -52,7 +51,7 @@ class TripsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_trips,container,false);
+        View view = inflater.inflate(R.layout.fragment_trips, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.list_all_trips);
         dataItems = new ArrayList<TripData>();
 //        Toast.makeText(getActivity(),word+"",Toast.LENGTH_SHORT).show();
@@ -65,15 +64,17 @@ class TripsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         cursor = database.ShowData();
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             user_id = cursor.getString(1);
         }
-        if (word.equals("home")){
+        if (word.equals("home")) {
             URL = "https://felska.000webhostapp.com/GetTrips.php";
-        }else if (word.equals("mine")){
+        } else if (word.equals("mine")) {
             URL = "https://felska.000webhostapp.com/GetMyTrips.php";
-        }else if (word.equals("new")){
+        } else if (word.equals("new")) {
             URL = "https://felska.000webhostapp.com/GetNewTrips.php";
+        } else {
+            URL = "https://felska.000webhostapp.com/GetTripsWithSearch.php";
         }
         final int size = dataItems.size();
         if (size > 0) {
@@ -83,28 +84,29 @@ class TripsFragment extends Fragment {
 //            adapter.notifyItemRangeRemoved(0, size);
         }
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        Toast.makeText(getActivity(), word, Toast.LENGTH_SHORT).show();
         progressDialog.setMessage("Loading Data ...");
         progressDialog.show();
-        StringRequest stringRequest = new StringRequest( Request.Method.POST, URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            String s = URLEncoder.encode(response,"ISO-8859-1");
-                            response = URLDecoder.decode(s,"UTF-8");
-                        }catch (UnsupportedEncodingException e){
+                            String s = URLEncoder.encode(response, "ISO-8859-1");
+                            response = URLDecoder.decode(s, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
                         progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray jsonArray = jsonObject.getJSONArray("trip_data");
-                            for (int i=0; i<jsonArray.length(); i++){
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 //String id, String name, String date, String description, String imageurl, String from_to
                                 TripData item = new TripData(
                                         object.getString("id"),
-                                        object.getString("fname")+" "+object.getString("lname"),
+                                        object.getString("fname") + " " + object.getString("lname"),
                                         object.getString("trip_date"),
                                         object.getString("trip_from_details"),
                                         object.getString("image_url"),
@@ -113,16 +115,16 @@ class TripsFragment extends Fragment {
                                 );
                                 dataItems.add(item);
                             }
-                            recyclerView.setAdapter( new TripAdapter(dataItems, new TripAdapter.OnItemClickListener() {
+                            recyclerView.setAdapter(new TripAdapter(dataItems, new TripAdapter.OnItemClickListener() {
 
                                 @Override
                                 public void onItemClick(TripData item) {
 //                                    Toast.makeText(getActivity(), "Item Clicked", Toast.LENGTH_LONG).show();
-                                    Intent intent=new Intent(getActivity(),TripDetailsActivity.class);
-                                    intent.putExtra("trip_id",item.getId());
+                                    Intent intent = new Intent(getActivity(), TripDetailsActivity.class);
+                                    intent.putExtra("trip_id", item.getId());
                                     startActivity(intent);
                                 }
-                            },getActivity()) );
+                            }, getActivity()));
 //                            recyclerView.setAdapter(adapter);
 
                         } catch (JSONException e) {
@@ -133,13 +135,14 @@ class TripsFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                Toast.makeText(getActivity(),error.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> hashMap = new HashMap<>();
-                hashMap.put("user_id",user_id);
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("user_id", user_id);
+                hashMap.put("word", word);
                 return hashMap;
             }
         };

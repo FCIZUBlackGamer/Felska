@@ -33,18 +33,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressLint("ValidFragment")
-class AllReview extends Fragment {
+class NotificationFragment extends Fragment {
     RecyclerView recyclerView;
-    ArrayList<ReviewData> dataItems;
-    String user_id;
+    ArrayList<NotiData> dataItems;
+    String word = "home";
+    String URL = "", user_id;
     Database database;
     Cursor cursor;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_reviews,container,false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.list_all_reviews);
-        dataItems = new ArrayList<ReviewData>();
+        View view = inflater.inflate(R.layout.fragment_notification,container,false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list_all_requests);
+        dataItems = new ArrayList<NotiData>();
+//        Toast.makeText(getActivity(),word+"",Toast.LENGTH_SHORT).show();
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         database = new Database(getActivity());
         return view;
@@ -57,10 +60,19 @@ class AllReview extends Fragment {
         while (cursor.moveToNext()){
             user_id = cursor.getString(1);
         }
+        URL = "https://felska.000webhostapp.com/GetNotificationTrips.php";
+
+        final int size = dataItems.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                dataItems.remove(0);
+            }
+//            adapter.notifyItemRangeRemoved(0, size);
+        }
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading Data ...");
         progressDialog.show();
-        StringRequest stringRequest = new StringRequest( Request.Method.POST, "https://felska.000webhostapp.com/GetReviews.php",
+        StringRequest stringRequest = new StringRequest( Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -73,20 +85,27 @@ class AllReview extends Fragment {
                         progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            JSONArray jsonArray = jsonObject.getJSONArray("review");
+                            JSONArray jsonArray = jsonObject.getJSONArray("trip_data");
                             for (int i=0; i<jsonArray.length(); i++){
                                 JSONObject object = jsonArray.getJSONObject(i);
-//                                String name, String date, String description, String imageurl, float rate
-                                ReviewData item = new ReviewData(
+                                //String id, String name, String date, String description, String imageurl, String from_to
+                                NotiData item = new NotiData(
+                                        object.getString("id"),
                                         object.getString("fname")+" "+object.getString("lname"),
-                                        object.getString("review_date"),
-                                        object.getString("trip_desc"),
-                                        object.getString("image_url"),
-                                        Float.parseFloat(object.getString("trip_rate"))
+                                        object.getString("image_url")
                                 );
                                 dataItems.add(item);
                             }
-                            recyclerView.setAdapter( new ReviewAdapter(dataItems, getActivity() ));
+                            recyclerView.setAdapter( new NotificationAdapter(dataItems, new NotificationAdapter.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(NotiData item) {
+//                                    Toast.makeText(getActivity(), "Item Clicked", Toast.LENGTH_LONG).show();
+//                                    Intent intent=new Intent(getActivity(),TripDetailsActivity.class);
+//                                    intent.putExtra("request_id",item.getId());
+//                                    startActivity(intent);
+                                }
+                            },getActivity()) );
 //                            recyclerView.setAdapter(adapter);
 
                         } catch (JSONException e) {
