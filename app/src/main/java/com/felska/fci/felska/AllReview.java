@@ -77,14 +77,24 @@ class AllReview extends Fragment {
                             for (int i=0; i<jsonArray.length(); i++){
                                 JSONObject object = jsonArray.getJSONObject(i);
 //                                String name, String date, String description, String imageurl, float rate
-                                ReviewData item = new ReviewData(
-                                        object.getString("fname")+" "+object.getString("lname"),
-                                        object.getString("review_date"),
-                                        object.getString("trip_desc"),
-                                        object.getString("image_url"),
-                                        Float.parseFloat(object.getString("trip_rate"))
-                                );
-                                dataItems.add(item);
+                                try{
+                                    ReviewData item = new ReviewData(
+                                            object.getString("fname") + " " + object.getString("lname"),
+                                            object.getString("review_date"),
+                                            object.getString("trip_desc"),
+                                            object.getString("image_url"),
+                                            Float.parseFloat(object.getString("trip_rate"))
+                                    );
+                                    dataItems.add(item);
+                                }catch (Exception e){
+                                    ReviewData item = new ReviewData(
+                                            object.getString("fname") + " " + object.getString("lname"),
+                                            object.getString("review_date"),
+                                            object.getString("trip_desc"),
+                                            object.getString("image_url"),
+                                            0.0f);
+                                    dataItems.add(item);
+                                }
                             }
                             recyclerView.setAdapter( new ReviewAdapter(dataItems, getActivity() ));
 //                            recyclerView.setAdapter(adapter);

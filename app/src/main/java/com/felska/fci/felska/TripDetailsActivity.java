@@ -57,6 +57,7 @@ public class TripDetailsActivity extends Activity {
     View alertLayout;
     RatingBar rateUser;
     EditText review_feedback;
+    RequestQueue queue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +71,8 @@ public class TripDetailsActivity extends Activity {
         while (cursor.moveToNext()) {
             user_id = cursor.getString(1);
         }
+        trip_state = "";
+        owner_id = "wait";
         trip_image = findViewById(R.id.user_image);
         goon = findViewById(R.id.goon);
         review = findViewById(R.id.review);
@@ -86,13 +89,11 @@ public class TripDetailsActivity extends Activity {
         to_detail = findViewById(R.id.to_details);
         from_detail = findViewById(R.id.from_details);
         money = findViewById(R.id.money);
-
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("loading ...");
         progressDialog.show();
-        final RequestQueue queue = Volley.newRequestQueue(TripDetailsActivity.this);
+        queue = Volley.newRequestQueue(TripDetailsActivity.this);
         StringRequest request = new StringRequest(Request.Method.POST, "https://felska.000webhostapp.com/GetTripsDteails.php", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -110,7 +111,7 @@ public class TripDetailsActivity extends Activity {
                         Picasso.with(TripDetailsActivity.this)
                                 .load(object1.getString("image_url"))
                                 .into(trip_image);
-                    Toast.makeText(TripDetailsActivity.this, object1.getString("image_url"), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(TripDetailsActivity.this, object1.getString("image_url"), Toast.LENGTH_LONG).show();
 
                     trip_owner_name.setText(object1.getString("fname") + " " + object1.getString("lname"));
                     trip_time.setText(object1.getString("trip_date"));
@@ -160,41 +161,20 @@ public class TripDetailsActivity extends Activity {
             }
         };
         queue.add(request);
+    }
 
-        StringRequest request1 = new StringRequest(Request.Method.POST, "https://felska.000webhostapp.com/GetTripState.php", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                trip_state = response;
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error instanceof ServerError) {
-                    Toast.makeText(TripDetailsActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                } else if (error instanceof NetworkError) {
-                    Toast.makeText(TripDetailsActivity.this, "Bad Network", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                } else if (error instanceof TimeoutError) {
-                    Toast.makeText(TripDetailsActivity.this, "Timeout Error", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(TripDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }) {
 
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", user_id);
-                params.put("owner_id", owner_id);
-                return params;
-            }
-        };
-        queue.add(request1);
+
+
+//        Toast.makeText(TripDetailsActivity.this, "User Id: "+user_id, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(TripDetailsActivity.this, "Owner Id: "+owner_id, Toast.LENGTH_SHORT).show();
+        if (!owner_id.equals("wait")) {
+            getTripState();
+        }
 
         call.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +186,7 @@ public class TripDetailsActivity extends Activity {
         goon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Toast.makeText(TripDetailsActivity.this,trip_state,Toast.LENGTH_SHORT).show();
                 if (trip_state.equals("Not Found!")) {
                     // Go On trip!
                     StringRequest request2 = new StringRequest(Request.Method.POST, "https://felska.000webhostapp.com/JoinTrip.php", new Response.Listener<String>() {
@@ -240,7 +221,6 @@ public class TripDetailsActivity extends Activity {
                             }
                         }
                     }) {
-
                         @Override
                         protected Map<String, String> getParams() throws AuthFailureError {
                             Map<String, String> params = new HashMap<String, String>();
@@ -262,7 +242,8 @@ public class TripDetailsActivity extends Activity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(final View v) {
-                if (trip_state.equals("2")) {
+                getTripState();
+                if (trip_state.contains("2")) {
                     // Make Review
                     inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     alertLayout = inflater.inflate(R.layout.review_feedback, null);
@@ -349,13 +330,52 @@ public class TripDetailsActivity extends Activity {
                     dialog.show();
 
                 } else if (trip_state.equals("1")) {
-                    Toast.makeText(TripDetailsActivity.this, "Please Wait Until Partner Confirm Your request First!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TripDetailsActivity.this, "Please wait until trip owner data is downloaded OR Wait Until Partner Confirm Your request First!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(TripDetailsActivity.this, "You Can't Make Review Before Making a trip!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TripDetailsActivity.this, "Please wait until trip owner data is downloaded OR You Can't Make Review Before Making a trip!", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+    }
+    private void getTripState(){
+        StringRequest request1 = new StringRequest(Request.Method.POST, "https://felska.000webhostapp.com/GetTripState.php", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                trip_state = response;
+//                    if (response.equals("Not Found!")) {
+//                Toast.makeText(TripDetailsActivity.this, "Trip State: " + response, Toast.LENGTH_SHORT).show();
 
+//                    }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof ServerError) {
+                    Toast.makeText(TripDetailsActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(TripDetailsActivity.this, "Bad Network", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(TripDetailsActivity.this, "Timeout Error", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(TripDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", user_id);
+                params.put("owner_id", owner_id);
+                return params;
+            }
+        };
+        queue.add(request1);
     }
 }

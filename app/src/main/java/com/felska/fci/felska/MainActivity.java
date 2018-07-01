@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity
 
         while (cursor.moveToNext()){
             semail = cursor.getString(2);
+            Toast.makeText(MainActivity.this, "Email: "+semail, Toast.LENGTH_SHORT).show();
+
         }
 
         fragmentManager = getFragmentManager();

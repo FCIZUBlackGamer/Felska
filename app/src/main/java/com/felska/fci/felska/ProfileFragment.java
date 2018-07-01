@@ -163,14 +163,24 @@ class ProfileFragment extends Fragment {
                                 revew ++;
                                 JSONObject object = jsonArray.getJSONObject(i);
 //                                String name, String date, String description, String imageurl, float rate
-                                ReviewData item = new ReviewData(
-                                        object.getString("fname")+" "+object.getString("lname"),
-                                        object.getString("review_date"),
-                                        object.getString("trip_desc"),
-                                        object.getString("image_url"),
-                                        Float.parseFloat(object.getString("trip_rate"))
-                                );
-                                dataItems.add(item);
+                                try{
+                                    ReviewData item = new ReviewData(
+                                            object.getString("fname") + " " + object.getString("lname"),
+                                            object.getString("review_date"),
+                                            object.getString("trip_desc"),
+                                            object.getString("image_url"),
+                                            Float.parseFloat(object.getString("trip_rate"))
+                                    );
+                                    dataItems.add(item);
+                                }catch (Exception e){
+                                    ReviewData item = new ReviewData(
+                                            object.getString("fname") + " " + object.getString("lname"),
+                                            object.getString("review_date"),
+                                            object.getString("trip_desc"),
+                                            object.getString("image_url"),
+                                            0.0f);
+                                    dataItems.add(item);
+                                }
                             }
                             reviews.setText("Reviews ("+revew+")");
                             recyclerView.setAdapter( new ReviewAdapter(dataItems, getActivity() ));
